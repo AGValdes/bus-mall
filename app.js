@@ -8,6 +8,7 @@ var imageThreeElement = document.getElementById('image-three');
 var imageContainer = document.getElementById('image-container');
 var recentRandomNumbers = [];
 var numberOfRounds = 25;
+var roundsTaken = 0;
 // constructor function for creating product object instances
 function Product(filepath, productName) {
   this.filepath = filepath;
@@ -41,8 +42,10 @@ new Product('img/wine-glass.jpg', 'wine-glass');
 // console.log(allProducts);
 // Random Number Generator
 function getRandomNumber(min, max) {
+
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
 // Get a random index between 0 and the length of our all Products array, and render those to the page
 function renderProducts(imageElement) {
   var randomIndex = getRandomNumber(0, allProducts.length - 1);
@@ -60,21 +63,35 @@ function renderProducts(imageElement) {
 }
 // Add event listener for when user clicks a product picture, track this in the form of votes, and render 3 new random products.
 
-imageContainer.addEventListener('click', function (event) {
+var handleClick = imageContainer.addEventListener('click', function (event) {
+  event.preventDefault();
   var chosenProduct = event.target.title;
-
   for (var i = 0; i < allProducts.length; i++) {
     if (chosenProduct === allProducts[i].name) {
       console.log('increasing votes for', allProducts[i].name);
       allProducts[i].votes++;
+      console.log(roundsTaken);
     }
+    limitNumberOfTurns();
   }
   renderProducts(imageOneElement);
   renderProducts(imageTwoElement);
   renderProducts(imageThreeElement);
-
+  roundsTaken++;
+  for (var j = 0; j < numberOfRounds; j++) {
+    if (roundsTaken === numberOfRounds) {
+      imageContainer.removeEventListener('click', handleClick);
+    }
+  }
 });
 
+function limitNumberOfTurns() {
+  if (roundsTaken === numberOfRounds) {
+    imageContainer.removeEventListener('click', handleClick)
+
+  }
+}
 renderProducts(imageOneElement);
 renderProducts(imageTwoElement);
 renderProducts(imageThreeElement);
+
