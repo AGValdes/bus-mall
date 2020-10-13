@@ -3,5 +3,14 @@
 }
 
 img{
-  width: 200px;
+  width: 33%;
+}
+
+ul{
+  margin: 10px;
+}
+
+button{
+ background: navy;
+ color: lightgrey;
 }

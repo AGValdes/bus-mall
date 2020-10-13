@@ -9,11 +9,14 @@ var imageContainer = document.getElementById('image-container');
 var recentRandomNumbers = [];
 var numberOfRounds = 25;
 var roundsTaken = 0;
+var btn = document.createElement('BUTTON');
 // constructor function for creating product object instances
 function Product(filepath, productName) {
   this.filepath = filepath;
   this.name = productName;
   this.votes = 0;
+  this.thisRoundOptions = [];
+  this.numberOfViews = 0;
 
   allProducts.push(this);
 }
@@ -53,45 +56,61 @@ function renderProducts(imageElement) {
   while (recentRandomNumbers.includes(randomIndex)) {
     randomIndex = getRandomNumber(0, allProducts.length - 1);
   }
-
+  //might want to think about using numberOfViews in somekind of if/else statement, evening out the number of times each one gets viewed?
   imageElement.src = allProducts[randomIndex].filepath;
   imageElement.alt = allProducts[randomIndex].name;
   imageElement.title = allProducts[randomIndex].name;
-
+  allProducts[randomIndex].numberOfViews++;
+  allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
   recentRandomNumbers = [];
   recentRandomNumbers.push(randomIndex);
 }
+
 // Add event listener for when user clicks a product picture, track this in the form of votes, and render 3 new random products.
 
-var handleClick = imageContainer.addEventListener('click', function (event) {
+imageContainer.addEventListener('click', handleClick);
+function handleClick(event) {
   event.preventDefault();
   var chosenProduct = event.target.title;
   for (var i = 0; i < allProducts.length; i++) {
     if (chosenProduct === allProducts[i].name) {
-      console.log('increasing votes for', allProducts[i].name);
+      // console.log('increasing votes for', allProducts[i].name);
       allProducts[i].votes++;
-      console.log(roundsTaken);
+      // console.log(roundsTaken);
     }
-    limitNumberOfTurns();
   }
   renderProducts(imageOneElement);
   renderProducts(imageTwoElement);
   renderProducts(imageThreeElement);
   roundsTaken++;
-  for (var j = 0; j < numberOfRounds; j++) {
-    if (roundsTaken === numberOfRounds) {
-      imageContainer.removeEventListener('click', handleClick);
-    }
-  }
-});
-
+  limitNumberOfTurns();
+}
+//removes event listener on 25th round
 function limitNumberOfTurns() {
   if (roundsTaken === numberOfRounds) {
-    imageContainer.removeEventListener('click', handleClick)
-
+    imageContainer.removeEventListener('click', handleClick);
+    renderResultsButton();
   }
 }
+function renderResultsButton() {
+  // var btn = document.createElement('BUTTON');
+  btn.innerHTML = 'View Results';
+  document.body.appendChild(btn);
+}
+// waits for user to click the 'view results' button, and then appends list items to an unordered list containing the number of votes and number of view for each product object.
+btn.addEventListener('click', resultClick);
+function resultClick(event) {
+  var ulElement = document.getElementById('resultslist');
+  for (var i = 0; i < allProducts.length; i++) {
+    var liElement = document.createElement('li');
+    liElement.textContent = `${allProducts[i].name} had ${allProducts[i].votes} votes, and was seen ${allProducts[i].numberOfViews} times.`;
+    ulElement.appendChild(liElement);
+  }
+}
+
+
 renderProducts(imageOneElement);
 renderProducts(imageTwoElement);
 renderProducts(imageThreeElement);
+
 
