@@ -10,6 +10,8 @@ var recentRandomNumbers = [];
 var numberOfRounds = 25;
 var roundsTaken = 0;
 var btn = document.createElement('BUTTON');
+var votesArray = [];
+var productNamesArray = [];
 // constructor function for creating product object instances
 function Product(filepath, productName) {
   this.filepath = filepath;
@@ -19,6 +21,7 @@ function Product(filepath, productName) {
   this.numberOfViews = 0;
 
   allProducts.push(this);
+  productNamesArray.push(this.name);
 }
 // create object instances for each product
 new Product('img/bag.jpg', 'bag');
@@ -56,14 +59,18 @@ function renderProducts(imageElement) {
   while (recentRandomNumbers.includes(randomIndex)) {
     randomIndex = getRandomNumber(0, allProducts.length - 1);
   }
+  if (recentRandomNumbers.length > 5) {
+    recentRandomNumbers.shift();
+  }
   //might want to think about using numberOfViews in somekind of if/else statement, evening out the number of times each one gets viewed?
   imageElement.src = allProducts[randomIndex].filepath;
   imageElement.alt = allProducts[randomIndex].name;
   imageElement.title = allProducts[randomIndex].name;
   allProducts[randomIndex].numberOfViews++;
   allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
-  recentRandomNumbers = [];
+
   recentRandomNumbers.push(randomIndex);
+
 }
 
 // Add event listener for when user clicks a product picture, track this in the form of votes, and render 3 new random products.
@@ -84,12 +91,19 @@ function handleClick(event) {
   renderProducts(imageThreeElement);
   roundsTaken++;
   limitNumberOfTurns();
+
 }
+
 //removes event listener on 25th round
 function limitNumberOfTurns() {
   if (roundsTaken === numberOfRounds) {
     imageContainer.removeEventListener('click', handleClick);
     renderResultsButton();
+  }
+}
+function makeVotesArrayForChart() {
+  for (var j = 0; j < allProducts.length; j++) {
+    votesArray.push(allProducts[j].votes);
   }
 }
 function renderResultsButton() {
@@ -112,5 +126,3 @@ function resultClick(event) {
 renderProducts(imageOneElement);
 renderProducts(imageTwoElement);
 renderProducts(imageThreeElement);
-
-
