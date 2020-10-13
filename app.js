@@ -10,6 +10,9 @@ var recentRandomNumbers = [];
 var numberOfRounds = 25;
 var roundsTaken = 0;
 var btn = document.createElement('BUTTON');
+var votesArray = [];
+var productNamesArray = [];
+var viewsArray = [];
 // constructor function for creating product object instances
 function Product(filepath, productName) {
   this.filepath = filepath;
@@ -19,28 +22,10 @@ function Product(filepath, productName) {
   this.numberOfViews = 0;
 
   allProducts.push(this);
+  productNamesArray.push(this.name);
 }
 // create object instances for each product
-new Product('img/bag.jpg', 'bag');
-new Product('img/banana.jpg', 'banana');
-new Product('img/bathroom.jpg', 'bathroom');
-new Product('img/boots.jpg', 'boots');
-new Product('img/breakfast.jpg', 'breakfast');
-new Product('img/bubblegum.jpg', 'bubblegum');
-new Product('img/chair.jpg', 'chair');
-new Product('img/cthulhu.jpg', 'cthulhu');
-new Product('img/dog-duck.jpg', 'dog-duck');
-new Product('img/dragon.jpg', 'dragon');
-new Product('img/pen.jpg', 'pen');
-new Product('img/pet-sweep.jpg', 'pet-sweep');
-new Product('img/scissors.jpg', 'scissors');
-new Product('img/shark.jpg', 'shark');
-new Product('img/sweep.png', 'sweep');
-new Product('img/tauntaun.jpg', 'tauntaun');
-new Product('img/unicorn.jpg', 'unicorn');
-new Product('img/usb.gif', 'usb');
-new Product('img/water-can.jpg', 'water-can');
-new Product('img/wine-glass.jpg', 'wine-glass');
+
 
 // console.log(allProducts);
 // Random Number Generator
@@ -56,14 +41,18 @@ function renderProducts(imageElement) {
   while (recentRandomNumbers.includes(randomIndex)) {
     randomIndex = getRandomNumber(0, allProducts.length - 1);
   }
+  if (recentRandomNumbers.length > 5) {
+    recentRandomNumbers.shift();
+  }
   //might want to think about using numberOfViews in somekind of if/else statement, evening out the number of times each one gets viewed?
   imageElement.src = allProducts[randomIndex].filepath;
   imageElement.alt = allProducts[randomIndex].name;
   imageElement.title = allProducts[randomIndex].name;
   allProducts[randomIndex].numberOfViews++;
   allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
-  recentRandomNumbers = [];
+
   recentRandomNumbers.push(randomIndex);
+
 }
 
 // Add event listener for when user clicks a product picture, track this in the form of votes, and render 3 new random products.
@@ -84,12 +73,43 @@ function handleClick(event) {
   renderProducts(imageThreeElement);
   roundsTaken++;
   limitNumberOfTurns();
+
+
 }
+
+new Product('img/bag.jpg', 'bag');
+new Product('img/banana.jpg', 'banana');
+new Product('img/bathroom.jpg', 'bathroom');
+new Product('img/boots.jpg', 'boots');
+new Product('img/breakfast.jpg', 'breakfast');
+new Product('img/bubblegum.jpg', 'bubblegum');
+new Product('img/chair.jpg', 'chair');
+new Product('img/cthulhu.jpg', 'cthulhu');
+new Product('img/dog-duck.jpg', 'dog-duck');
+new Product('img/dragon.jpg', 'dragon');
+new Product('img/pen.jpg', 'pen');
+new Product('img/pet-sweep.jpg', 'pet-sweep');
+new Product('img/scissors.jpg', 'scissors');
+new Product('img/shark.jpg', 'shark');
+new Product('img/sweep.png', 'sweep');
+new Product('img/tauntaun.jpg', 'tauntaun');
+new Product('img/unicorn.jpg', 'unicorn');
+new Product('img/usb.gif', 'usb');
+new Product('img/water-can.jpg', 'water-can');
+new Product('img/wine-glass.jpg', 'wine-glass');
 //removes event listener on 25th round
 function limitNumberOfTurns() {
   if (roundsTaken === numberOfRounds) {
     imageContainer.removeEventListener('click', handleClick);
     renderResultsButton();
+    makeVotesArrayForChart();
+  }
+}
+
+function makeVotesArrayForChart() {
+  for (var i = 0; i < allProducts.length; i++) {
+    votesArray.push(allProducts[i].votes);
+    viewsArray.push(allProducts[i].numberOfViews);
   }
 }
 function renderResultsButton() {
@@ -106,6 +126,8 @@ function resultClick(event) {
     liElement.textContent = `${allProducts[i].name} had ${allProducts[i].votes} votes, and was seen ${allProducts[i].numberOfViews} times.`;
     ulElement.appendChild(liElement);
   }
+  makeVotesChart();
+  makeViewsChart();
 }
 
 
@@ -114,3 +136,141 @@ renderProducts(imageTwoElement);
 renderProducts(imageThreeElement);
 
 
+function makeVotesChart() {
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNamesArray,
+      datasets: [{
+        label: 'Product Votes',
+        data: votesArray,
+        backgroundColor: [
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+
+        ],
+        borderColor: [
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)'
+
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+function makeViewsChart() {
+  var ctx = document.getElementById('mySecondChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNamesArray,
+      datasets: [{
+        label: 'Product Views',
+        data: viewsArray,
+        backgroundColor: [
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+
+        ],
+        borderColor: [
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)'
+
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
