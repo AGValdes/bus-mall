@@ -1,0 +1,16 @@
+*{
+  background-color: darkgray;
+}
+
+img{
+  width: 33%;
+}
+
+ul{
+  margin: 10px;
+}
+
+button{
+ background: navy;
+ color: lightgrey;
+}
