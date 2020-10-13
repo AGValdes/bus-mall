@@ -12,6 +12,7 @@ var roundsTaken = 0;
 var btn = document.createElement('BUTTON');
 var votesArray = [];
 var productNamesArray = [];
+var viewsArray = [];
 // constructor function for creating product object instances
 function Product(filepath, productName) {
   this.filepath = filepath;
@@ -108,6 +109,7 @@ function limitNumberOfTurns() {
 function makeVotesArrayForChart() {
   for (var i = 0; i < allProducts.length; i++) {
     votesArray.push(allProducts[i].votes);
+    viewsArray.push(allProducts[i].numberOfViews);
   }
 }
 function renderResultsButton() {
@@ -124,7 +126,8 @@ function resultClick(event) {
     liElement.textContent = `${allProducts[i].name} had ${allProducts[i].votes} votes, and was seen ${allProducts[i].numberOfViews} times.`;
     ulElement.appendChild(liElement);
   }
-  makeChart();
+  makeVotesChart();
+  makeViewsChart();
 }
 
 
@@ -133,7 +136,7 @@ renderProducts(imageTwoElement);
 renderProducts(imageThreeElement);
 
 
-function makeChart() {
+function makeVotesChart() {
   var ctx = document.getElementById('myChart').getContext('2d');
   var myChart = new Chart(ctx, {
     type: 'bar',
@@ -142,6 +145,75 @@ function makeChart() {
       datasets: [{
         label: 'Product Votes',
         data: votesArray,
+        backgroundColor: [
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(55, 255, 255, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+
+        ],
+        borderColor: [
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(55, 255, 255, 1)',
+          'rgba(54, 162, 235, 1)'
+
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+function makeViewsChart() {
+  var ctx = document.getElementById('mySecondChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNamesArray,
+      datasets: [{
+        label: 'Product Views',
+        data: viewsArray,
         backgroundColor: [
           'rgba(55, 255, 255, 0.2)',
           'rgba(54, 162, 235, 0.2)',
