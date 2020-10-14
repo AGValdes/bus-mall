@@ -1,9 +1,12 @@
-*{
+body{
   background-color: darkgray;
 }
-
+#chart{
+  background-color: whitesmoke;
+}
 img{
   width: 25%;
+  height: height: 200px;
 }
 
 ul{
