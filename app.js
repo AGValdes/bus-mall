@@ -14,12 +14,12 @@ var votesArray = [];
 var productNamesArray = [];
 var viewsArray = [];
 // constructor function for creating product object instances
-function Product(filepath, productName) {
+function Product(filepath, productName, votes = 0, numberOfViews = 0) {
   this.filepath = filepath;
   this.name = productName;
-  this.votes = 0;
-  this.thisRoundOptions = [];
-  this.numberOfViews = 0;
+  this.votes = votes;
+  // this.thisRoundOptions = [];
+  this.numberOfViews = numberOfViews;
 
   allProducts.push(this);
   productNamesArray.push(this.name);
@@ -49,7 +49,7 @@ function renderProducts(imageElement) {
   imageElement.alt = allProducts[randomIndex].name;
   imageElement.title = allProducts[randomIndex].name;
   allProducts[randomIndex].numberOfViews++;
-  allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
+  // allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
 
   recentRandomNumbers.push(randomIndex);
 
@@ -60,6 +60,10 @@ function renderProducts(imageElement) {
 imageContainer.addEventListener('click', handleClick);
 function handleClick(event) {
   event.preventDefault();
+  console.log(allProducts);
+  var itemsMadeIntoJson = JSON.stringify(allProducts);
+  localStorage.setItem('itemsFromLocalStorage', itemsMadeIntoJson);
+
   var chosenProduct = event.target.title;
   for (var i = 0; i < allProducts.length; i++) {
     if (chosenProduct === allProducts[i].name) {
@@ -77,26 +81,39 @@ function handleClick(event) {
 
 }
 // create object instances for each product
-new Product('img/bag.jpg', 'bag');
-new Product('img/banana.jpg', 'banana');
-new Product('img/bathroom.jpg', 'bathroom');
-new Product('img/boots.jpg', 'boots');
-new Product('img/breakfast.jpg', 'breakfast');
-new Product('img/bubblegum.jpg', 'bubblegum');
-new Product('img/chair.jpg', 'chair');
-new Product('img/cthulhu.jpg', 'cthulhu');
-new Product('img/dog-duck.jpg', 'dog-duck');
-new Product('img/dragon.jpg', 'dragon');
-new Product('img/pen.jpg', 'pen');
-new Product('img/pet-sweep.jpg', 'pet-sweep');
-new Product('img/scissors.jpg', 'scissors');
-new Product('img/shark.jpg', 'shark');
-new Product('img/sweep.png', 'sweep');
-new Product('img/tauntaun.jpg', 'tauntaun');
-new Product('img/unicorn.jpg', 'unicorn');
-new Product('img/usb.gif', 'usb');
-new Product('img/water-can.jpg', 'water-can');
-new Product('img/wine-glass.jpg', 'wine-glass');
+if (!localStorage.getItem('itemsFromLocalStorage')) {
+  new Product('img/bag.jpg', 'bag');
+  new Product('img/banana.jpg', 'banana');
+  new Product('img/bathroom.jpg', 'bathroom');
+  new Product('img/boots.jpg', 'boots');
+  new Product('img/breakfast.jpg', 'breakfast');
+  new Product('img/bubblegum.jpg', 'bubblegum');
+  new Product('img/chair.jpg', 'chair');
+  new Product('img/cthulhu.jpg', 'cthulhu');
+  new Product('img/dog-duck.jpg', 'dog-duck');
+  new Product('img/dragon.jpg', 'dragon');
+  new Product('img/pen.jpg', 'pen');
+  new Product('img/pet-sweep.jpg', 'pet-sweep');
+  new Product('img/scissors.jpg', 'scissors');
+  new Product('img/shark.jpg', 'shark');
+  new Product('img/sweep.png', 'sweep');
+  new Product('img/tauntaun.jpg', 'tauntaun');
+  new Product('img/unicorn.jpg', 'unicorn');
+  new Product('img/usb.gif', 'usb');
+  new Product('img/water-can.jpg', 'water-can');
+  new Product('img/wine-glass.jpg', 'wine-glass');
+} else {
+  var itemsFromLocalAsAString = localStorage.getItem('itemsFromLocalStorage');
+  var itemsFromLocalAsAnArray = JSON.parse(itemsFromLocalAsAString);
+
+  for (var i = 0; i < itemsFromLocalAsAnArray.length; i++) {
+    var reNameProduct = itemsFromLocalAsAnArray[i].productName;
+    var giveBackSource = itemsFromLocalAsAnArray[i].filepath;
+    var giveBackVotes = itemsFromLocalAsAnArray[i].votes;
+    var giveBackViews = itemsFromLocalAsAnArray[i].numberOfViews;
+    new Product(giveBackSource, reNameProduct, giveBackVotes, giveBackViews);
+  }
+}
 //removes event listener on 25th round
 function limitNumberOfTurns() {
   if (roundsTaken === numberOfRounds) {
