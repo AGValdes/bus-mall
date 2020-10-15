@@ -16,13 +16,13 @@ var viewsArray = [];
 // constructor function for creating product object instances
 function Product(filepath, productName, votes = 0, numberOfViews = 0) {
   this.filepath = filepath;
-  this.name = productName;
+  this.title = productName;
   this.votes = votes;
   // this.thisRoundOptions = [];
   this.numberOfViews = numberOfViews;
 
   allProducts.push(this);
-  productNamesArray.push(this.name);
+  productNamesArray.push(this.title);
 }
 
 
@@ -46,8 +46,8 @@ function renderProducts(imageElement) {
   }
   //might want to think about using numberOfViews in somekind of if/else statement, evening out the number of times each one gets viewed?
   imageElement.src = allProducts[randomIndex].filepath;
-  imageElement.alt = allProducts[randomIndex].name;
-  imageElement.title = allProducts[randomIndex].name;
+  imageElement.alt = allProducts[randomIndex].title;
+  imageElement.title = allProducts[randomIndex].title;
   allProducts[randomIndex].numberOfViews++;
   // allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
 
@@ -66,7 +66,7 @@ function handleClick(event) {
 
   var chosenProduct = event.target.title;
   for (var i = 0; i < allProducts.length; i++) {
-    if (chosenProduct === allProducts[i].name) {
+    if (chosenProduct === allProducts[i].title) {
       // console.log('increasing votes for', allProducts[i].name);
       allProducts[i].votes++;
       // console.log(roundsTaken);
@@ -107,7 +107,7 @@ if (!localStorage.getItem('itemsFromLocalStorage')) {
   var itemsFromLocalAsAnArray = JSON.parse(itemsFromLocalAsAString);
 
   for (var i = 0; i < itemsFromLocalAsAnArray.length; i++) {
-    var reNameProduct = itemsFromLocalAsAnArray[i].productName;
+    var reNameProduct = itemsFromLocalAsAnArray[i].title;
     var giveBackSource = itemsFromLocalAsAnArray[i].filepath;
     var giveBackVotes = itemsFromLocalAsAnArray[i].votes;
     var giveBackViews = itemsFromLocalAsAnArray[i].numberOfViews;
