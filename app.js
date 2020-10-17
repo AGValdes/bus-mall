@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 'use strict';
 
 var allProducts = [];
@@ -18,16 +17,12 @@ function Product(filepath, productName, votes = 0, numberOfViews = 0) {
   this.filepath = filepath;
   this.title = productName;
   this.votes = votes;
-  // this.thisRoundOptions = [];
   this.numberOfViews = numberOfViews;
 
   allProducts.push(this);
   productNamesArray.push(this.title);
 }
 
-
-
-// console.log(allProducts);
 // Random Number Generator
 function getRandomNumber(min, max) {
 
@@ -44,12 +39,12 @@ function renderProducts(imageElement) {
   if (recentRandomNumbers.length > 5) {
     recentRandomNumbers.shift();
   }
-  //might want to think about using numberOfViews in somekind of if/else statement, evening out the number of times each one gets viewed?
+
   imageElement.src = allProducts[randomIndex].filepath;
   imageElement.alt = allProducts[randomIndex].title;
   imageElement.title = allProducts[randomIndex].title;
   allProducts[randomIndex].numberOfViews++;
-  // allProducts[randomIndex].thisRoundOptions.push(allProducts[randomIndex]);
+
 
   recentRandomNumbers.push(randomIndex);
 
@@ -60,16 +55,15 @@ function renderProducts(imageElement) {
 imageContainer.addEventListener('click', handleClick);
 function handleClick(event) {
   event.preventDefault();
-  console.log(allProducts);
   var itemsMadeIntoJson = JSON.stringify(allProducts);
   localStorage.setItem('itemsFromLocalStorage', itemsMadeIntoJson);
 
   var chosenProduct = event.target.title;
   for (var i = 0; i < allProducts.length; i++) {
     if (chosenProduct === allProducts[i].title) {
-      // console.log('increasing votes for', allProducts[i].name);
+
       allProducts[i].votes++;
-      // console.log(roundsTaken);
+
     }
   }
   renderProducts(imageOneElement);
@@ -80,7 +74,7 @@ function handleClick(event) {
 
 
 }
-// create object instances for each product
+// check to see if local storage is empty, if so create the object instances. If not, retrieve the data from local storage, parse it into js, and run it through the contructor function to reinstantiate the objects.
 if (!localStorage.getItem('itemsFromLocalStorage')) {
   new Product('img/bag.jpg', 'bag');
   new Product('img/banana.jpg', 'banana');
@@ -122,32 +116,32 @@ function limitNumberOfTurns() {
     makeVotesArrayForChart();
   }
 }
-
+// makes an array of each product's votes to feed into the chart.
 function makeVotesArrayForChart() {
   for (var i = 0; i < allProducts.length; i++) {
     votesArray.push(allProducts[i].votes);
     viewsArray.push(allProducts[i].numberOfViews);
   }
 }
+//renders the view results button to the page
 function renderResultsButton() {
-  // var btn = document.createElement('BUTTON');
   btn.innerHTML = 'View Results';
   document.body.appendChild(btn);
 }
-// waits for user to click the 'view results' button, and then appends list items to an unordered list containing the number of votes and number of view for each product object.
+// waits for user to click the 'view results' button, and then appends the chart containing the number of votes and number of view for each product object.
 btn.addEventListener('click', resultClick);
 
 function resultClick(event) {
-  makeVotesChart();
+  makeChart();
 }
 
-
+//executable code
 renderProducts(imageOneElement);
 renderProducts(imageTwoElement);
 renderProducts(imageThreeElement);
 
-
-function makeVotesChart() {
+// renders the chart. taken from the chart js library.
+function makeChart() {
   var ctx = document.getElementById('myChart').getContext('2d');
   var myChart = new Chart(ctx, {
     type: 'bar',

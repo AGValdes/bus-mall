@@ -1,12 +1,30 @@
 body{
-  background-color: darkgray;
+  background-color: rgb(46, 46, 105);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main{
+  background-color: rgb(94, 90, 105);
 }
 #chart{
   background-color: whitesmoke;
 }
 img{
-  width: 25%;
-  height: height: 200px;
+  width: 220px;
+  height: 200px;
+  border: inset 5px lightblue;
+}
+header{
+  background-color: rgb(46, 46, 105);
+}
+h1{
+  text-align: center;
+  font-size: 2em;
+  font-family: Arial, Helvetica, sans-serif;
+  color: whitesmoke;
+  text-shadow: navy 2px 2px;
+  background-color: rgb(46, 46, 105);
 }
 
 ul{
